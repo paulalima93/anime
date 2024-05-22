@@ -20,13 +20,16 @@ const AnimeTop = (props) => {
 
     let size = 30;
     let color = "tomato";
+    let title = props.anime.title
+    let shortTitle = title.substring(0, 30)
     return (
         <TouchableOpacity style={styles.button}>
             <Image source={{ uri: props.anime.images.jpg.image_url }} style={styles.image} />
             <TouchableOpacity style={styles.icon}>
                 <Ionicons name='heart' size={size} color={color} />
             </TouchableOpacity>
-            {fontLoaded && <Text style={styles.title}>{props.anime.title}</Text>}
+            {/* Se o titulo for muito grande, usa substring + ... / se o titulo for menor que o substring, exibe o titulo*/}
+            {fontLoaded && <Text style={styles.title}>{title > shortTitle ? shortTitle + "..." : title}</Text>}
         </TouchableOpacity>
     );
 }

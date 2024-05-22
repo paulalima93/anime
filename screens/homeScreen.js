@@ -7,7 +7,8 @@ import {
     SafeAreaView,
     Platform,
     StatusBar,
-    FlatList
+    FlatList,
+    TouchableOpacity
 } from 'react-native'
 import axios from "axios";
 import * as Font from "expo-font";
@@ -25,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
     const [animeRecommendations, setAnimeRecommendations] = useState([]);
     const [animeTop, setAnimeTop] = useState([]);
     const [animeSeason, setAnimeSeason] = useState([]);
-
+    
     useEffect(() => {
             loadFonts();
             getAnimeRecommendations();
@@ -91,14 +92,26 @@ const HomeScreen = ({ navigation }) => {
     } else {
         let animes_recommendations = animeRecommendations.slice(0, 10);
         let animes_top = animeTop.slice(0, 10);
-        let animes_season = animeSeason.slice(0,10);
+
+        //ordena os resultados de acordo com o rank
+        let animes_season = animeSeason.sort(function(a, b){
+            return a.rank - b.rank
+        })
+        animes_season = animes_season.slice(0,10);
         return (
             <View style={styles.container}>
                 <SafeAreaView style={styles.safearea} />
                 <ScrollView>
                     <Header />
                     <View style={styles.lowerContainer}>
-                        <Text style={styles.text1}> Top Animes</Text>
+                        <View style={styles.subTitleContainer}>
+                            <Text style={styles.text1}>Top Animes</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Lista', { title: 'Top Animes', data: animeTop })}>
+                                <Text style={styles.text2}> Ver mais</Text>
+                            </TouchableOpacity>
+                            
+                        </View>
+                        
                         <View style={styles.card}>
                             <FlatList
                                 data={animes_top}
@@ -108,7 +121,13 @@ const HomeScreen = ({ navigation }) => {
                             />
                         </View>
                         
-                        <Text style={styles.text1}> Animes da Temporada</Text>
+                        <View style={styles.subTitleContainer}>
+                            <Text style={styles.text1}>Animes da Temporada</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Lista', { title: 'Animes da Temporada', data: animeSeason })}>
+                                <Text style={styles.text2}> Ver mais</Text>
+                            </TouchableOpacity>
+                        </View>
+                        
                         <View style={styles.card}>
                         <FlatList
                                 data={animes_season}
@@ -118,7 +137,13 @@ const HomeScreen = ({ navigation }) => {
                             />
                         </View>
 
-                        <Text style={styles.text1}> Recomendações</Text>
+                        <View style={styles.subTitleContainer}>
+                            <Text style={styles.text1}>Recomendações</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Lista', { title: 'Recomendações', data: animeRecommendations })}>
+                                <Text style={styles.text2}> Ver mais</Text>
+                            </TouchableOpacity>
+                        </View>
+                        
                         <View style={styles.card}>
                             <FlatList
                                 data={animes_recommendations}
@@ -159,6 +184,17 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 20,
         color: "#1D5871"
+    },
+    text2: {
+        fontSize: 16,
+        marginLeft: 20,
+        color: "#1D5871",
+        marginTop: 4
+    },
+    subTitleContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginRight: 20
     }
 })
 
