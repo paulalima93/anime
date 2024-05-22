@@ -14,6 +14,7 @@ import * as Font from "expo-font";
 import Header from "../components/Header";
 import AnimeRecommendations from "../components/AnimeRecommendation";
 import AnimeTop from "../components/AnimeTop";
+import AnimeSeason from "../components/AnimeSeason";
 
 let comicfont = {
     "comic": require("../assets/font/Comicbon.ttf")
@@ -23,11 +24,13 @@ const HomeScreen = ({ navigation }) => {
     const [fontLoaded, setFontLoaded] = useState(false);
     const [animeRecommendations, setAnimeRecommendations] = useState([]);
     const [animeTop, setAnimeTop] = useState([]);
+    const [animeSeason, setAnimeSeason] = useState([]);
 
     useEffect(() => {
-        loadFonts();
-        getAnimeRecommendations();
-        getAnimeTop();
+            loadFonts();
+            getAnimeRecommendations();
+            getAnimeTop();
+            getAnimeSeason();
     }, []);
 
     const getAnimeRecommendations = () => {
@@ -52,6 +55,16 @@ const HomeScreen = ({ navigation }) => {
             });
     }
 
+    const getAnimeSeason = () => {
+        axios.get('https://api.jikan.moe/v4/seasons/now').then((response) => {
+            const data = response.data.data
+            setAnimeSeason(data)
+            
+        }).catch((error)=>{
+            console.log(error.message)
+        })
+    }
+
     const loadFonts = async () => {
         await Font.loadAsync(comicfont);
         setFontLoaded(true);
@@ -65,15 +78,20 @@ const HomeScreen = ({ navigation }) => {
         return <AnimeTop anime={anime} navigation={navigation} />
     }
 
+    const renderItemSeason = ({ item: anime }) => {
+        return <AnimeSeason anime={anime} navigation={navigation} />
+    }
+
     if (!fontLoaded) {
         return (
-            <View>
+            <View style={styles.container}>
                 <Text>Carregando...</Text>
             </View>
         )
     } else {
         let animes_recommendations = animeRecommendations.slice(0, 10);
         let animes_top = animeTop.slice(0, 10);
+        let animes_season = animeSeason.slice(0,10);
         return (
             <View style={styles.container}>
                 <SafeAreaView style={styles.safearea} />
@@ -89,6 +107,17 @@ const HomeScreen = ({ navigation }) => {
                                 horizontal={true}
                             />
                         </View>
+                        
+                        <Text style={styles.text1}> Animes da Temporada</Text>
+                        <View style={styles.card}>
+                        <FlatList
+                                data={animes_season}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={renderItemSeason}
+                                horizontal={true}
+                            />
+                        </View>
+
                         <Text style={styles.text1}> Recomendações</Text>
                         <View style={styles.card}>
                             <FlatList
@@ -97,10 +126,6 @@ const HomeScreen = ({ navigation }) => {
                                 renderItem={renderItemRecommendation}
                                 horizontal={true}
                             />
-                        </View>
-                        <Text style={styles.text1}> Novidades</Text>
-                        <View style={styles.card}>
-                            <Text > Construindo... </Text>
                         </View>
                     </View>
                 </ScrollView>
@@ -131,7 +156,6 @@ const styles = StyleSheet.create({
         padding: 10
     },
     text1: {
-        fontFamily: "Comic",
         fontSize: 20,
         marginLeft: 20,
         color: "#1D5871"

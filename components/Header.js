@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     },
     appName: {
         color: "#1D5871",
-        fontFamily: "Comic",
+      //  fontFamily: "Comic",
         fontWeight: "bold",
         fontSize: 30
     },

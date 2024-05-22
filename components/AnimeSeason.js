@@ -7,7 +7,8 @@ const comicfont = {
     "comic": require("../assets/font/Comicbon.ttf")
 };
 
-const AnimeRecommendations = (props) => {
+
+const AnimeSeason = (props) => {
     const [fontLoaded, setFontLoaded] = useState(false);
 
     useEffect(() => {
@@ -18,29 +19,30 @@ const AnimeRecommendations = (props) => {
         loadFonts();
     }, []);
 
-    let size = 30;
-    let color = "tomato";
+        let size = 30;
+        let color = "tomato";
     return (
+        
         <TouchableOpacity style={styles.button}>
-            <Image source={{ uri: props.anime.entry.images.jpg.image_url }} style={styles.image} />
+            <Image source={{ uri: props.anime.images.jpg.image_url }} style={styles.image} />
             <TouchableOpacity style={styles.icon}>
                 <Ionicons name='heart' size={size} color={color} />
             </TouchableOpacity>
-            {fontLoaded && <Text style={styles.title}>{props.anime.entry.title}</Text>}
+            {fontLoaded && <Text style={styles.title}>{props.anime.title}</Text>}
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: "#FFFB",
+        backgroundColor: "#E5F7FB",
         borderRadius: 5,
         width: 150,
-        padding: 10,
+        padding: 7,
         margin: 2
     },
     title: {
-       // fontFamily: "Comic",
+      //  fontFamily: "Comic",
         fontSize: 15,
         color: "#1D5871"
     },
@@ -62,4 +64,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AnimeRecommendations;
+export default AnimeSeason;
